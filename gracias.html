@@ -56,7 +56,7 @@
             Layout.loadPartials();
 
             // Recupera total de la sesion (set por carrito)
-            const total = sessionStorage.getItem('LAS_ORDER_TOTAL') || '$0';
+            const total = sessionStorage.getItem('LAST_ORDER_TOTAL') || '$0';
             $('#orderTotal').text(total);
 
             // Genera numero de pedido

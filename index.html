@@ -97,6 +97,50 @@
         `);
         });
     }
+     //modifiacion madeleyne
+    function renderOffcanvasCart() {
+        const cart = getCart();
+        const $body = $('#offcanvasCartBody').empty();
+        let total = 0;
+
+        if (!cart.length) {
+            $body.append('<div class="alert alert-info">Tu carrito está vacío.</div>');
+            $('#btnConfirmarCanvas').prop('disabled', true);
+            $('#offcanvasCartTotal').text(fmt.format(0));
+            return;
+        } else {
+            $('#btnConfirmarCanvas').prop('disabled', false);
+        }
+
+        cart.forEach(item => {
+            const prod = getProds().find(p => p.id === item.id) || {};
+            const name = item.name || prod.name || 'Producto';
+            const price = item.price || prod.price || 0;
+            const img = prod.img || `https://picsum.photos/seed/prod${item.id}/100/100`;
+            const qty = item.qty || 1;
+            const subtotal = price * qty;
+            total += subtotal;
+
+            $body.append(`
+            <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+                <img src="${img}" class="rounded me-2" width="60" height="60" alt="${name}">
+                <div class="flex-grow-1">
+                <div class="fw-bold">${name}</div>
+                <small class="text-muted">${fmt.format(price)} x ${qty}</small>
+                <div class="mt-1">
+                    <button class="btn btn-sm btn-outline-secondary btnMinus" data-id="${item.id}">-</button>
+                    <span class="mx-2">${qty}</span>
+                    <button class="btn btn-sm btn-outline-secondary btnPlus" data-id="${item.id}">+</button>
+                </div>
+                </div>
+                <div class="text-end fw-bold">${fmt.format(subtotal)}</div>
+            </div>
+            `);
+        });
+
+        $('#offcanvasCartTotal').text(fmt.format(total));
+    }
+    //fin modificacion
 
     $(function(){
         // Obliga login si entran directo por URL
@@ -115,8 +159,65 @@
             if(found){ found.qty = (found.qty||1)+1; }
             else { cart.push({id, name, price, qty:1}); }
             saveCart(cart);
+
+            renderOffcanvasCart();
+            const offcanvas = new bootstrap.Offcanvas('#offcanvasCart');
+            offcanvas.show();
         });
+
+        
+        // Botones + y -
+        $(document).on('click', '.btnPlus', function(){
+            const id = Number($(this).data('id'));
+            const cart = getCart();
+            const item = cart.find(i => i.id === id);
+            if(item){ item.qty++; saveCart(cart); renderOffcanvasCart(); }
+        });
+
+        $(document).on('click', '.btnMinus', function(){
+            const id = Number($(this).data('id'));
+            let cart = getCart();
+            const item = cart.find(i => i.id === id);
+            if(item){
+                item.qty--;
+                if(item.qty <= 0){ cart = cart.filter(i => i.id !== id); }
+                saveCart(cart);
+                renderOffcanvasCart();
+            }
+        });
+
+
+        $('#btnConfirmarCanvas').on('click', () => {
+        const totalText = $('#offcanvasCartTotal').text();
+        sessionStorage.setItem('LAST_ORDER_TOTAL', totalText);
+        saveCart([]); // vacía el carrito
+        location.href = 'gracias.html'; // redirige a la página de agradecimiento
+        });
+
     });
 </script>
+
+
+<!--Madeleyne-->
+<!-- Offcanvas Carrito -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Carrito</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body" id="offcanvasCartBody">
+    <!-- Aquí se renderizan los productos -->
+  </div>
+  <div class="p-3 border-top">
+    <div class="d-flex justify-content-between">
+      <strong>Total:</strong>
+      <span id="offcanvasCartTotal">$0</span>
+    </div>
+    <button class="btn btn-primary w-100 mt-2" id="btnConfirmarCanvas" disabled>
+      Confirmar compra
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
