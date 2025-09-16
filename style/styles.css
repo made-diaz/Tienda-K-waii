@@ -12,3 +12,58 @@ nav {
     height: 500px;
     object-fit: cover;
 }
+
+/* 1) btnAgregarIndex: hover básico (solo color) */
+#btnDark, #btnConfirmarCanvas {
+    background-color: #E99DFC;
+    color: white;
+    border: 1px solid blueviolet;
+    padding: .45rem .75rem;
+    border-radius: .375rem;
+    cursor: pointer;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+/* Hover: cambia fondo y borde, sin elevación */
+#btnDark:hover, #btnConfirmarCanvas:hover {
+    background-color: #D57AF0;   /* tono ligeramente distinto */
+    border-color: #b56de0;
+}
+
+/* Foco accesible para teclado */
+#btnDark:focus-visible, #btnConfirmarCanvas:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(213,122,240,0.18);
+}
+
+
+
+
+/* 2) btnLight: botón blanco con texto morado; al apretar (active) se pone rosado */
+#btnLight {
+    background-color: white;
+    color: #5a1a8a;              /* morado oscuro para el texto */
+    border: 1px solid #5a1a8a;
+    padding: .45rem .75rem;
+    border-radius: .375rem;
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+/* Hover: ligero fondo morado muy suave para indicar interacción */
+#btnLight:hover {
+    background-color: #faf0ff;   /* muy tenue */
+}
+
+/* Active: al apretar se vuelve rosado (y texto blanco para contraste) */
+#btnLight:active {
+    background-color: #E99DFC;   /* rosado usado antes */
+    color: white;
+    border-color: #c46bd4;
+}
+
+/* Foco accesible */
+#btnLight:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(233,157,252,0.18);
+}
