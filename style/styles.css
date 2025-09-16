@@ -1,0 +1,14 @@
+footer {
+    background-color: cornflowerblue;
+    color: white;
+}
+nav {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.carousel-item img{
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
