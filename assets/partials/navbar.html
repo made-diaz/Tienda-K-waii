@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Mi Tienda</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+                <li class="nav-item admin-only d-none"><a class="nav-link" href="admin.html">Admin Productos</a></li>
+                <li class="nav-item admin-only d-none"><a class="nav-link" href="admin_usuarios.html">Admin Usuarios</a></li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item me-3">
+                    <a class="nav-link position-relative" href="carrito.html">
+                        🛒 Carrito
+                        <span id="cartCount" class="badge bg-light text-dark position-absolute top-0 start-100 translate-middle">0</span>
+                    </a>
+                </li>
+                <li class="nav-item"><span class="navbar-text text-light" id="navUserName">Invitado</span></li>
+                <li class="nav-item ms-2"><a class="btn btn-outline-light btn-sm" href="#" id="btnLogout">Salir</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

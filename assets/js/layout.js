@@ -1,21 +1,22 @@
-(function (){
+// ====== assets/js/layout.js (versión jQuery .load) ======
+(function () {
     const CART_KEY = 'APP_CART';
 
-    function  getCartCount() {
-      try {
-          const raw = localStorage.getItem(CART_KEY);
-          if (!raw) return 0;
-          const items = JSON.parse(raw);
-          return items.reduce((acc, it) => acc + (Number(it.qty) || 1),0);
-      }  catch { return 0; }
+    function getCartCount() {
+        try {
+            const raw = localStorage.getItem(CART_KEY);
+            if (!raw) return 0;
+            const items = JSON.parse(raw);
+            return items.reduce((acc, it) => acc + (Number(it.qty) || 1), 0);
+        } catch { return 0; }
     }
 
     function markActiveNavLink() {
         try {
             const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
             document.querySelectorAll('a.nav-link').forEach(a => {
-               const href = (a.getAttribute('href') || '').toLowerCase();
-               if (href === here) a.classList.add('active');
+                const href = (a.getAttribute('href') || '').toLowerCase();
+                if (href === here) a.classList.add('active');
             });
         } catch {}
     }
@@ -29,12 +30,12 @@
         const cartCountEl = document.getElementById('cartCount');
 
         // Usuario y rol
-        if(user){
-            if(nameEl) nameEl.textContent = `${user.name} (${user.role})`;
-            if(user.role === 'admin') adminEls.forEach(el => el.classList.remove('d-none'));
+        if (user) {
+            if (nameEl) nameEl.textContent = `${user.name} (${user.role})`;
+            if (user.role === 'admin') adminEls.forEach(el => el.classList.remove('d-none'));
         } else {
-            if(nameEl) nameEl.textContent = 'Invitado';
-            if(logoutBtn) {
+            if (nameEl) nameEl.textContent = 'Invitado';
+            if (logoutBtn) {
                 logoutBtn.classList.add('disabled');
                 logoutBtn.setAttribute('tabindex', '-1');
                 logoutBtn.setAttribute('aria-disabled', 'true');
@@ -42,13 +43,13 @@
         }
 
         // Carrito
-        if(cartCountEl) cartCountEl.textContent = String(getCartCount());
+        if (cartCountEl) cartCountEl.textContent = String(getCartCount());
 
         // Logout
-        if(logoutBtn) {
-            logoutBtn.addEventListener('click', function(e ){
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                if(window.AuthStore && window.AuthStore.logout) {
+                if (window.AuthStore && window.AuthStore.logout) {
                     window.AuthStore.logout();
                 }
                 window.location.href = 'login.html';
@@ -60,19 +61,18 @@
         // Permite refrescar badge desde otras partes: window.dispatchEvent(new CustomEvent('cart:updated'))
         window.addEventListener('cart:updated', () => {
             const el = document.getElementById('cartCount');
-            if(el) el.textContent = String(getCartCount());
+            if (el) el.textContent = String(getCartCount());
         });
     }
 
-
-    // Helper para intentar dos rutas (assets/partials/... y partials/... )
-    function loadWithFallBack($target, pathA, pathB, after) {
-        $target.load(pathA, function (response, status){
-            if(status === 'error') {
+    // Helper para intentar dos rutas (assets/partials/... y partials/...)
+    function loadWithFallback($target, pathA, pathB, after) {
+        $target.load(pathA, function (response, status) {
+            if (status === 'error') {
                 $target.load(pathB, function (response2, status2) {
-                    if(status === 'error') {
-                        $target.html('<div class="alert alert-danger m-0">No se pudo cargar el contenido.</div>')
-                    }   else {
+                    if (status2 === 'error') {
+                        $target.html('<div class="alert alert-danger m-0">No se pudo cargar el contenido.</div>');
+                    } else {
                         after && after();
                     }
                 });
@@ -86,22 +86,22 @@
         const $navTarget = $('#navbar-container');
         const $footerTarget = $('#footer-container');
 
-        if($navTarget.length) {
-            loadWithFallBack($navTarget,
+        if ($navTarget.length) {
+            loadWithFallback($navTarget,
                 'assets/partials/navbar.html',
                 'partials/navbar.html',
                 initNavbarLogic
             );
         }
 
-        if($navTarget.length) {
-            loadWithFallBack($footerTarget,
+        if ($footerTarget.length) {
+            loadWithFallback($footerTarget,
                 'assets/partials/footer.html',
                 'partials/footer.html',
                 () => {
-                    // Asegurar año dinamico aunque el parcial no traiga script
+                    // Asegurar año dinámico aunque el parcial no traiga script
                     const yearEl = document.getElementById('yearNow');
-                    if(yearEl) yearEl.textContent = new Date().getFullYear();
+                    if (yearEl) yearEl.textContent = new Date().getFullYear();
                 }
             );
         }
