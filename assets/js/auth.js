@@ -7,7 +7,7 @@ const LS_KEYS = {
 const ALLOWED_DOMAINS_RE = /@(?:duocuc\.cl|duoc\.cl|gmail\.com)$/i;
 const AUTO_LOGIN_AFTER_REGISTER = true;
 
-function seedUserIfEmpty() {
+function seedUsersIfEmpty() {
     const raw = localStorage.getItem(LS_KEYS.USERS);
     if (!raw) {
         const seed = [
@@ -91,15 +91,15 @@ function loginUser(email, pass) {
 
 
 function getCurrentUser() {
-    try {return JSON.parse(localStorage.getItem(LS_KEYS.CURRENT_USER)) || null}
+    try {return JSON.parse(localStorage.getItem(LS_KEYS.CURRENT_USER)) || null; }
     catch {return  null}
 }
 
 function logout() {
-    localStorage.removeItem(LS_KEYS.CURRENT_USER)
+    localStorage.removeItem(LS_KEYS.CURRENT_USER);
 }
 
-seedUserIfEmpty()
+seedUsersIfEmpty()
 
 window.AuthStore = {
     LS_KEYS,
@@ -107,4 +107,4 @@ window.AuthStore = {
     loginUser,
     getCurrentUser,
     logout
-}
+};

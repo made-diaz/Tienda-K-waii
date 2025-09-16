@@ -79,26 +79,97 @@
             let total = 0
 
             if(!cart.length) {
-                $('#cartEmpty').removeClass('d-none')
-                $('#btnConfirmar').prop('disabled', true)
+                $('#cartEmpty').removeClass('d-none');
+                $('#btnConfirmar').prop('disabled', true);
             } else {
-                $('#cartEmpty').addClass('d-none')
-                $('#btnConfirmar').prop('disabled', false)
+                $('#cartEmpty').addClass('d-none');
+                $('#btnConfirmar').prop('disabled', false);
             }
 
 
             cart.forEach((it, i)=> {
                 //normaliza la informacion, intenta traer precio/nombre desde productos si falta
-                let name = it.name || (findProdInfo(it.id)?.name) || `Producto ${it.id}`
-                let price = (typeof it.price === 'number') ? it.price : (findProdInfo(it.id)?.price || 0)
-                let qty = Number(it.qty || 1
+                let name = it.name || (findProdInfo(it.id)?.name) || `Producto ${it.id}`;
+                let price = (typeof it.price === 'number') ? it.price : (findProdInfo(it.id)?.price || 0);
+                let qty = Number(it.qty) || 1;
 
-                const subtotal = price * qty
-                total += subtotal
-                
-                )
-            })
+                const subtotal = price * qty;
+                total += subtotal;
+
+                $tbody.append(`
+                    <tr data-id="${it.id}">
+                        <td>${i+1}</td>
+                        <td>${name}</td>
+                        <td class="text-end">${fmt.format(price)}</td>
+                        <td class="text-center">
+                            <div>
+                                <button class="btn btn-outline-secondary btnQty" data-delta="-1">-</button>
+                                <span class="btn btn-light disabled px-3">${qty}</span>
+                                <button class="btn btn-outline-secondary btnQty" data-delta="1">+</button>
+                            </div>
+                        </td>
+                        <td class="text-end">${fmt.format(subtotal)}</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-danger btnRemove">Eliminar</button>
+                        </td>
+                    </tr>
+                `);
+            });
+            $('#cartTotal').text(fmt.format(total));
         }
+
+        $(function (){
+            //Protege pagina (ambos roles pueden comprar)
+            const user = AuthStore.getCurrentUser();
+            if (!user) {location.href = 'login.html'; return;}
+
+            Layout.loadPartials();
+            renderCarrito();
+
+            //Vaciar
+            $('#btnVaciar').on('click', () => {
+                saveCart([]);
+                renderCarrito();
+            });
+
+            //Cambiar cantidades
+            $(document).on('click', '.btnQty', function () {
+                const delta = Number($(this).data('delta'));
+                const id = $(this).closet('tr').data('id');
+                const cart = getCart();
+                const item = cart.find(x => String(x.id) === String(id));
+                if (!item) return;
+                const newQty = (Number(item.qty) || 1) + delta;
+                if (newQty <+ 0) {
+                    //Eliminar si queda en 0
+                    const next = cart.filter(x => String(x.id) !== String(id));
+                    saveCart(next);
+                } else {
+                    item.qty = newQty;
+                    saveCart(cart);
+                }
+                renderCarrito();
+            });
+
+            //Eliminar item
+            $(document).on('click', 'btnRemove', function () {
+                const id = $(this).closest('tr').data('id');
+                const next = getCart().filter(x => String(x.id) !== String(id));
+                saveCart(next);
+                renderCarrito();
+            });
+
+            //Confirmar compra
+            $('#btnConfirmar').on('click', () => {
+                const totalText = $('#cartTotal').text();
+                //Guardar total para mostrar en gracias.html
+                sessionStorage.setItem('LAST_ORDER_TOTAL', totalText);
+                //Limpia carrito y badge
+                saveCart([]);
+                //A gracias
+                location.href = 'gracias.html'
+            });
+        });
     </script>
 </body>
 </html>

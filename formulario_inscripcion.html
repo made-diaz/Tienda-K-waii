@@ -35,24 +35,24 @@
     <script src="assets/js/auth.js"></script>
     <script>
     $(function(){
-        const params = new URLSearchParams(location.search)
-        if(params.has('email')) $('#correo').val(params.get('email'))
+        const params = new URLSearchParams(location.search);
+        if(params.has('email')) $('#correo').val(params.get('email'));
 
         $('#registroForm').on('submit', function(e){
-        e.preventDefault()
+        e.preventDefault();
         const resp = AuthStore.registerUser({
             name: $('#nombre').val(),
             email: $('#correo').val(),
             pass: $('#pass').val()
-        })
+        });
         if(!resp.ok){
-            $('#regError').removeClass('d-none').text(resp.message)
-            return
+            $('#regError').removeClass('d-none').text(resp.message);
+            return;
         }
-        $('#regError').removeClass('d-none').text(resp.message)
+        $('#regOk').removeClass('d-none');
         setTimeout(()=> window.location.href = resp.dest || 'index.html', 800)
-        })
-    })
+        });
+    });
     </script>
 </body>
 </html>

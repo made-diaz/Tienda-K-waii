@@ -49,13 +49,13 @@
                     $msg.addClass('alert alert-info')
                     .html(`Correo no registrado. <a href="formulario_inscripcion.html?email=${encodeURIComponent($('#email').val())}">Regístrate aquí</a>.`)
                 } else {
-                    $msg.addClass('alert alert-alert-danger').text(resp.message)
+                    $msg.addClass('alert alert-danger').text(resp.message);
                 }
-                return
+                return;
             }
             window.location.href = resp.dest;
-        })  
-    })
+        });
+    });
     </script>
 </body>
 </html>
